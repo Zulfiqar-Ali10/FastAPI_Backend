@@ -1,5 +1,6 @@
-import motor.motor_asyncio
 import os
+
+import motor.motor_asyncio
 from dotenv import load_dotenv
 
 load_dotenv()  # Load variables from .env

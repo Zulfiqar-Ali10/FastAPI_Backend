@@ -1,8 +1,10 @@
-from pydantic import BaseModel, Field
 from typing import Optional
 
+from pydantic import BaseModel, Field
+
+
 class Product(BaseModel):
-    id: Optional[str]  # MongoDB ObjectId will be string
+    id: Optional[str]
     name: str = Field(..., example="Laptop")
     price: float = Field(..., example=1500)
     description: Optional[str] = Field(None, example="Gaming Laptop")

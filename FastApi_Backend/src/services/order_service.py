@@ -1,11 +1,13 @@
-from typing import List, Optional
-from models.order_model import Order, OrderCreate, OrderUpdate
-from config.db import db
 import uuid
+from typing import List
 
-collection = db["orders"]
+from config.db import db
+from models.order_model import Order, OrderCreate, OrderUpdate
+from utils.exceptions import raise_not_found
 
-# Get all orders
+collection = db.orders
+
+
 async def get_all_orders() -> List[Order]:
     orders = []
     cursor = collection.find({})
@@ -13,33 +15,31 @@ async def get_all_orders() -> List[Order]:
         orders.append(Order(**doc))
     return orders
 
-# Get order by ID
-async def get_order_by_id(order_id: str) -> Optional[Order]:
-    doc = await collection.find_one({"id": order_id})
-    if doc:
-        return Order(**doc)
-    return None
 
-# Create new order
-async def create_order(order_data: OrderCreate) -> Order:
+async def get_order_by_id(order_id: str):
+    doc = await collection.find_one({"id": order_id})
+    if not doc:
+        raise_not_found(f"Order {order_id} not found")
+    return Order(**doc)
+
+
+async def create_order(order_data: OrderCreate):
     order = Order(id=str(uuid.uuid4()), **order_data.dict())
     await collection.insert_one(order.dict())
     return order
 
-# Update order (partial or full)
-async def update_order(order_id: str, update_data: OrderUpdate) -> Optional[Order]:
+
+async def update_order(order_id: str, update_data: OrderUpdate):
     update_fields = {k: v for k, v in update_data.dict().items() if v is not None}
     if not update_fields:
         return await get_order_by_id(order_id)
     result = await collection.update_one({"id": order_id}, {"$set": update_fields})
     if result.modified_count == 0:
-        return None
+        raise_not_found(f"Order {order_id} not found")
     return await get_order_by_id(order_id)
 
-# Delete order
-async def delete_order(order_id: str) -> Optional[Order]:
+
+async def delete_order(order_id: str):
     order = await get_order_by_id(order_id)
-    if order:
-        await collection.delete_one({"id": order_id})
-        return order
-    return None
+    await collection.delete_one({"id": order_id})
+    return order
