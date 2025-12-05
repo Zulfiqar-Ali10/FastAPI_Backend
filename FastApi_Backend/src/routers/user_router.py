@@ -16,7 +16,7 @@ router = APIRouter(prefix="/users", tags=["Users"])
 async def read_users():
     users = await get_all_users()
     return success_response(
-        [u.dict() for u in users], message="Users fetched successfully"
+        [u.dict() for u in users], message="Users fetch successfully"
     )
 
 
