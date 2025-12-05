@@ -1,0 +1,16 @@
+# Ignore the virtual environment folder
+venv/
+
+# Ignore Python cache and compiled files
+__pycache__/
+*.pyc
+
+# Ignore environment variable file containing sensitive credentials
+.env
+
+# Ignore Visual Studio Code workspace settings
+.vscode/
+
+# Ignore log files and system-generated files
+*.log
+.DS_Store
