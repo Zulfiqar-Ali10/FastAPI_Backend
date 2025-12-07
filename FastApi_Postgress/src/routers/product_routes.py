@@ -25,5 +25,5 @@ def create_new_product(product: dict, db: Session = Depends(get_db)):
 def read_single(product_id: int, db: Session = Depends(get_db)):
     product = get_product(db, product_id)
     if not product:
-        raise HTTPException(404, "Product not found")
+        raise HTTPException(404, "Product Not Found")
     return product
