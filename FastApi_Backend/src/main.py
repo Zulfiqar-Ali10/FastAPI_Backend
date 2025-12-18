@@ -13,4 +13,4 @@ app.include_router(order_router.router)
 # Root endpoint
 @app.get("/")
 async def root():
-    return {"message": "Welcome to E-commerce API"}
+    return {"message": "Welcome to E-Commerce API"}
